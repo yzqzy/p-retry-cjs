@@ -1,7 +1,7 @@
-import {type OperationOptions} from 'retry';
+import { type OperationOptions } from "retry";
 
 export class AbortError extends Error {
-	readonly name: 'AbortError';
+	readonly name: "AbortError";
 	readonly originalError: Error;
 
 	/**
@@ -39,7 +39,9 @@ export type Options = {
 
 	If the `onFailedAttempt` function throws, all retries will be aborted and the original promise will reject with the thrown error.
 	*/
-	readonly onFailedAttempt?: (error: FailedAttemptError) => void | Promise<void>;
+	readonly onFailedAttempt?: (
+		error: FailedAttemptError,
+	) => void | Promise<void>;
 
 	/**
 	You can abort retrying using [`AbortController`](https://developer.mozilla.org/en-US/docs/Web/API/AbortController).
@@ -108,5 +110,5 @@ console.log(result);
 */
 export default function pRetry<T>(
 	input: (attemptCount: number) => PromiseLike<T> | T,
-	options?: Options
+	options?: Options,
 ): Promise<T>;

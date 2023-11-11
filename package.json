@@ -1,26 +1,24 @@
 {
-	"name": "p-retry",
+	"name": "p-retry-cjs",
 	"version": "6.1.0",
 	"description": "Retry a promise-returning or async function",
 	"license": "MIT",
-	"repository": "sindresorhus/p-retry",
-	"funding": "https://github.com/sponsors/sindresorhus",
+	"repository": "yzqzy/p-retry-cjs",
 	"author": {
-		"name": "Sindre Sorhus",
-		"email": "sindresorhus@gmail.com",
-		"url": "https://sindresorhus.com"
+		"name": "heora",
+		"email": "yueluo.yang@gmail.com",
+		"url": "https://www.yueluo.club"
 	},
-	"type": "module",
-	"exports": "./index.js",
+	"exports": "./dist/index.js",
+	"types": "dist/index.d.ts",
 	"engines": {
 		"node": ">=16.17"
 	},
 	"scripts": {
-		"test": "xo && ava && tsd"
+		"build": "tsc"
 	},
 	"files": [
-		"index.js",
-		"index.d.ts"
+		"dist"
 	],
 	"keywords": [
 		"promise",
@@ -43,13 +41,10 @@
 	],
 	"dependencies": {
 		"@types/retry": "0.12.2",
-		"is-network-error": "^1.0.0",
 		"retry": "^0.13.1"
 	},
 	"devDependencies": {
-		"ava": "^5.3.1",
 		"delay": "^6.0.0",
-		"tsd": "^0.28.1",
-		"xo": "^0.56.0"
+		"typescript": "^5.2.2"
 	}
 }

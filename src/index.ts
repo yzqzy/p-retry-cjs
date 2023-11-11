@@ -1,24 +1,31 @@
-import retry from 'retry';
-import isNetworkError from 'is-network-error';
+import retry from "retry";
+
+import isNetworkError from "./isNetworkError";
 
 export class AbortError extends Error {
-	constructor(message) {
+	public originalError: any;
+
+	constructor(message: any) {
 		super();
 
 		if (message instanceof Error) {
 			this.originalError = message;
-			({message} = message);
+			({ message } = message);
 		} else {
 			this.originalError = new Error(message);
 			this.originalError.stack = this.stack;
 		}
 
-		this.name = 'AbortError';
+		this.name = "AbortError";
 		this.message = message;
 	}
 }
 
-const decorateErrorWithCounts = (error, attemptNumber, options) => {
+const decorateErrorWithCounts = (
+	error: any,
+	attemptNumber: number,
+	options: any,
+) => {
 	// Minus 1 from attemptNumber because the first attempt does not count as a retry
 	const retriesLeft = options.retries - (attemptNumber - 1);
 
@@ -27,7 +34,7 @@ const decorateErrorWithCounts = (error, attemptNumber, options) => {
 	return error;
 };
 
-export default async function pRetry(input, options) {
+export default async function pRetry(input: any, options: any) {
 	return new Promise((resolve, reject) => {
 		options = {
 			onFailedAttempt() {},
@@ -43,15 +50,15 @@ export default async function pRetry(input, options) {
 		};
 
 		if (options.signal && !options.signal.aborted) {
-			options.signal.addEventListener('abort', abortHandler, {once: true});
+			options.signal.addEventListener("abort", abortHandler, { once: true });
 		}
 
 		const cleanUp = () => {
-			options.signal?.removeEventListener('abort', abortHandler);
+			options.signal?.removeEventListener("abort", abortHandler);
 			operation.stop();
 		};
 
-		operation.attempt(async attemptNumber => {
+		operation.attempt(async (attemptNumber) => {
 			try {
 				const result = await input(attemptNumber);
 				cleanUp();
@@ -59,7 +66,9 @@ export default async function pRetry(input, options) {
 			} catch (error) {
 				try {
 					if (!(error instanceof Error)) {
-						throw new TypeError(`Non-error was thrown: "${error}". You should only throw errors.`);
+						throw new TypeError(
+							`Non-error was thrown: "${error}". You should only throw errors.`,
+						);
 					}
 
 					if (error instanceof AbortError) {
@@ -70,7 +79,9 @@ export default async function pRetry(input, options) {
 						throw error;
 					}
 
-					await options.onFailedAttempt(decorateErrorWithCounts(error, attemptNumber, options));
+					await options.onFailedAttempt(
+						decorateErrorWithCounts(error, attemptNumber, options),
+					);
 
 					if (!operation.retry(error)) {
 						throw operation.mainError();
